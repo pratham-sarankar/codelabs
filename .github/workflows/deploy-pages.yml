@@ -26,9 +26,33 @@ jobs:
       - name: Install claat
         run: |
           CLAAT_VERSION="2.2.6"
-          curl -L https://github.com/googlecodelabs/tools/releases/download/v${CLAAT_VERSION}/claat-linux-amd64 -o claat
-          chmod +x claat
-          sudo mv claat /usr/local/bin/
+          MAX_RETRIES=3
+          RETRY_DELAY=5
+          
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Downloading claat (attempt $i/$MAX_RETRIES)..."
+            if curl -L --max-time 30 https://github.com/googlecodelabs/tools/releases/download/v${CLAAT_VERSION}/claat-linux-amd64 -o claat; then
+              # Verify it's a valid binary, not an error page
+              if file claat | grep -q "ELF\|executable"; then
+                chmod +x claat
+                sudo mv claat /usr/local/bin/
+                echo "claat installed successfully"
+                exit 0
+              else
+                echo "Downloaded file is not a valid binary, retrying..."
+                rm -f claat
+              fi
+            else
+              echo "Download failed, retrying in ${RETRY_DELAY}s..."
+            fi
+            
+            if [ $i -lt $MAX_RETRIES ]; then
+              sleep $RETRY_DELAY
+            fi
+          done
+          
+          echo "Failed to download claat after $MAX_RETRIES attempts"
+          exit 1
 
       - name: Build site
         run: |
