@@ -429,4 +429,3 @@ Test what you learned:
 5. What command compiles and packages your app? (mvn package)
 
 **Fantastic work!** You've created and run your first Maven project. 💪</content>
-<parameter name="filePath">/Users/prathamsarankar/Documents/Projects/codelabs/krce-java-selenium/3-maven/3-creating-first-maven-project/codelab.md
