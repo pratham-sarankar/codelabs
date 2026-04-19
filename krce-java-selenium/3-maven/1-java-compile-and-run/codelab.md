@@ -67,7 +67,7 @@ These files are part of the same package, so they must be compiled together.
 Open your command prompt or terminal and run:
 
 ```bash
-javac -d out src/com/example/Helper.java src/com/example/App.java
+javac -d out src/com/example/*.java
 ```
 
 ### What this command does:
