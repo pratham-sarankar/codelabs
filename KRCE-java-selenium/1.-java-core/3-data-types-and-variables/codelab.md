@@ -132,27 +132,54 @@ Let's start with primitive types.
 
 Java has exactly **8 primitive data types**. Each one stores a different kind of simple value.
 
+### How bits determine range
+
+Before looking at the types, let's understand how the size (in bits) decides the range of values a type can hold.
+
+A computer stores everything in **bits** (0s and 1s). A group of 8 bits is called a **byte**.
+
+- With **1 bit**, you can represent 2 values: `0` or `1`
+- With **2 bits**, you can represent 2² = 4 values: `00`, `01`, `10`, `11`
+- With **n bits**, you can represent 2ⁿ total values
+
+For **signed** types (which store both positive and negative numbers), one bit is used for the sign (+ or −). So the formula is:
+
+**Range = −2⁽ⁿ⁻¹⁾ to 2⁽ⁿ⁻¹⁾ − 1**
+
+For example, a `byte` has 8 bits:
+- Total values: 2⁸ = 256
+- Range: −2⁷ to 2⁷ − 1 = **-128 to 127**
+
+Let's see this for all integer types:
+
+| Type | Bits | Total values | Min (−2⁽ⁿ⁻¹⁾) | Max (2⁽ⁿ⁻¹⁾ − 1) |
+|------|------|-------------|---|---|
+| `byte` | 8 | 2⁸ = 256 | -128 | 127 |
+| `short` | 16 | 2¹⁶ = 65,536 | -32,768 | 32,767 |
+| `int` | 32 | 2³² ≈ 4.2 billion | -2,147,483,648 | 2,147,483,647 |
+| `long` | 64 | 2⁶⁴ ≈ 18.4 quintillion | -9,223,372,036,854,775,808 | 9,223,372,036,854,775,807 |
+
 ### Integer types (whole numbers)
 
 These store numbers without decimal points:
 
-| Type | Size | Range | Example |
-|------|------|-------|---------|
-| `byte` | 1 byte | -128 to 127 | `byte b = 100;` |
-| `short` | 2 bytes | -32,768 to 32,767 | `short s = 5000;` |
-| `int` | 4 bytes | -2.1 billion to 2.1 billion | `int i = 100000;` |
-| `long` | 8 bytes | very large numbers | `long l = 99999999L;` |
+| Type | Size | Bits | Range | Example |
+|------|------|------|-------|---------|
+| `byte` | 1 byte | 8 bits | -128 to 127 | `byte b = 100;` |
+| `short` | 2 bytes | 16 bits | -32,768 to 32,767 | `short s = 5000;` |
+| `int` | 4 bytes | 32 bits | -2,147,483,648 to 2,147,483,647 | `int i = 100000;` |
+| `long` | 8 bytes | 64 bits | -9.2 quintillion to 9.2 quintillion | `long l = 99999999L;` |
 
 > **Tip:** `int` is the most commonly used. Use `long` only when you need very large numbers. Notice the `L` at the end of a `long` value.
 
 ### Floating-point types (decimal numbers)
 
-These store numbers with decimal points:
+These store numbers with decimal points. Floating-point types use the IEEE 754 standard, so their bits are split between sign, exponent, and fraction — the range formula is different from integers.
 
-| Type | Size | Precision | Example |
-|------|------|-----------|---------|
-| `float` | 4 bytes | ~7 decimal digits | `float f = 3.14f;` |
-| `double` | 8 bytes | ~15 decimal digits | `double d = 3.14159;` |
+| Type | Size | Bits | Precision | Example |
+|------|------|------|-----------|---------|
+| `float` | 4 bytes | 32 bits (1 sign + 8 exponent + 23 fraction) | ~7 decimal digits | `float f = 3.14f;` |
+| `double` | 8 bytes | 64 bits (1 sign + 11 exponent + 52 fraction) | ~15 decimal digits | `double d = 3.14159;` |
 
 > **Tip:** `double` is the default for decimal numbers. Use `float` only when you need to save memory. Notice the `f` at the end of a `float` value.
 
@@ -167,7 +194,9 @@ char symbol = '@';
 
 | Type | Size | What it stores | Example |
 |------|------|----------------|---------|
-| `char` | 2 bytes | one character | `char c = 'Z';` |
+| `char` | 2 bytes | one Unicode character (0 to 65,535) | `char c = 'Z';` |
+
+> **Note:** `char` is **unsigned** (no negative values). With 16 bits: 2¹⁶ = 65,536 possible characters (0 to 65,535). This is why Java supports Unicode characters from many languages.
 
 ### Boolean type
 
@@ -180,9 +209,9 @@ boolean isRaining = false;
 
 | Type | Size | What it stores | Example |
 |------|------|----------------|---------|
-| `boolean` | 1 bit | true or false | `boolean b = true;` |
+| `boolean` | 1 bit (JVM uses 1 byte internally) | `true` or `false` | `boolean b = true;` |
 
-> **Tip:** Booleans are very useful in conditions and loops, which you will learn later.
+> **Note:** A boolean only needs 1 bit (2¹ = 2 values: true/false), but the JVM typically uses 1 byte for easier memory access.
 
 ---
 
