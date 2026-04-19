@@ -11,3 +11,5 @@ find "$(pwd)" -type f -name "codelab.md" | while read -r file; do
 done
 
 echo "Build complete - all codelabs exported to output/ directory."
+
+./generate_nav.sh
