@@ -1,6 +1,6 @@
 author: Pratham Sarankar
 summary: Learn to create your first Maven project in VS Code, run Maven commands, and add dependencies
-id: maven-first-project
+id: krce-java-selenium-maven-creating-first-maven-project
 categories: Java,Maven,Build Tools,VS Code
 environments: Web
 status: Published

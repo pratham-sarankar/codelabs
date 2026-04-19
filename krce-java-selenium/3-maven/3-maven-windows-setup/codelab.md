@@ -1,6 +1,6 @@
 author: Pratham Sarankar
 summary: Step-by-step guide to install and set up Apache Maven on Windows computers
-id: maven-windows-setup
+id: krce-java-selenium-maven-maven-windows-setup
 categories: Java,Maven,Build Tools,Windows
 environments: Web
 status: Published

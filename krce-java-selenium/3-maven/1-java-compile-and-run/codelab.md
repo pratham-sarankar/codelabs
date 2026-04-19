@@ -1,6 +1,6 @@
 author: Pratham Sarankar
 summary: Learn how to compile and run Java programs using javac and a custom output directory
-id: java-compile-run
+id: krce-java-selenium-maven-java-compile-and-run
 categories: Java,Build Tools
 environments: Web
 status: Published

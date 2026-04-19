@@ -1,6 +1,6 @@
 author: Pratham Sarankar
 summary: Introduction to Apache Maven - what it is, why we need it, and how it works
-id: maven-introduction
+id: krce-java-selenium-maven-maven-introduction
 categories: Java,Maven,Build Tools
 environments: Web
 status: Published
