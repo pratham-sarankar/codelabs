@@ -422,7 +422,7 @@ Now that you can create and run Maven projects, you can:
 
 Test what you learned:
 
-1. What VS Code command creates a Maven project? (Maven: Create Maven Project)
+1. What VS Code command creates a Maven project? (Maven: New Project)
 2. What folder contains your main Java code? (src/main/java)
 3. What file configures Maven dependencies? (pom.xml)
 4. Where do you find Java libraries to add? (Maven Central Repository)
