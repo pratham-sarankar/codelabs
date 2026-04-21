@@ -1,5 +1,5 @@
 author: Pratham Sarankar
-summary: Introduction to Selenium WebDriver - what it is, why we need it, and how it helps automate web browsers
+summary: Learn Selenium WebDriver basics and create your first automation script to open Google in Chrome
 id: selenium-introduction
 categories: Java,Selenium,Web Automation,Testing
 environments: Web
@@ -10,285 +10,364 @@ feedback link: https://github.com/pratham-sarankar/codelabs/issues
 
 ## Overview
 
-Welcome to the exciting world of web automation! 🎉 In this codelab, you will learn about **Selenium WebDriver** - a powerful tool that lets your Java programs control web browsers automatically.
+Welcome to the world of web automation! 🚀 In this codelab, you will create your first Selenium script that controls a web browser.
 
-By the end of this lesson, you will understand:
-- What Selenium is and why it's important
-- How Selenium helps automate web testing
-- The different parts of Selenium
-- Basic concepts like WebDriver and locators
-- Why Selenium is perfect for beginners
+By the end of this lesson, you will:
+- Understand what Selenium is
+- Create a Maven project with Selenium
+- Add Selenium as a dependency
+- Write a test that opens Google.com in Chrome
+- Run your first web automation script
 
-**Don't worry if this seems new!** We'll explain everything step by step with simple examples.
+**Let's build something cool!** 💪
 
 ---
 
 ## Prerequisites
 
-Before we start, you should know:
-- Basic Java programming (writing classes and methods)
-- Basic HTML concepts (web pages, elements, forms)
-- How to use a web browser
-
-If you don't know these yet, that's okay! Selenium will help you learn more about web development.
+Before starting, make sure you have:
+- ✅ **Maven installed** and working
+- ✅ **JDK installed** (Java Development Kit)
+- ✅ **Google Chrome browser** installed
+- ✅ **Completed the Maven codelabs** (you know how to create and run Maven projects)
 
 ---
 
 ## What is Selenium?
 
-**Selenium is a free, open-source tool that lets you write programs to control web browsers automatically.**
+**Selenium is a tool that lets your Java program control web browsers automatically.**
 
-Instead of manually clicking buttons and typing in forms, you can write Java code to do it for you!
+With Selenium, you can write code to:
+- Open websites
+- Click buttons
+- Fill forms
+- Read text from pages
+- Take screenshots
+- Test web applications
 
-**Selenium helps with:**
-- Testing web applications automatically
-- Scraping data from websites
-- Automating repetitive web tasks
-- Checking if websites work correctly
-
----
-
-## Why Do We Need Selenium?
-
-Imagine you have a website with many pages and forms. Testing it manually takes hours:
-
-### Manual Testing (Without Selenium):
-1. **Open browser** and go to website
-2. **Click login button** and enter username/password
-3. **Navigate through pages** checking each feature
-4. **Fill out forms** and submit data
-5. **Check if everything works** correctly
-6. **Repeat for different browsers** (Chrome, Firefox, Safari)
-
-**This is slow, boring, and easy to make mistakes!** ⏰
-
-### With Selenium:
-You write one Java program that:
-- Automatically opens browsers
-- Tests all features instantly
-- Runs the same tests on different browsers
-- Reports any problems found
-
-**Selenium saves time and catches bugs automatically!** ✨
+**Example:** Instead of manually opening Chrome and going to Google, you write Java code to do it automatically!
 
 ---
 
-## Selenium Components
+## Step 1: Create a New Maven Project
 
-Selenium has several tools for different needs:
+Just like in the previous Maven codelabs, create a new Maven project. Open your terminal and run:
 
-### 1. Selenium WebDriver
-**The main tool you'll use** - lets you write Java code to control browsers
-- Supports Chrome, Firefox, Edge, Safari
-- Works with Java, Python, C#, JavaScript, and more
-
-### 2. Selenium IDE
-**Browser extension** for recording and playing back tests
-- No coding needed!
-- Good for simple tests
-- Can export to WebDriver code
-
-### 3. Selenium Grid
-**Runs tests on multiple computers/browsers simultaneously**
-- Test on different operating systems
-- Speed up testing with parallel execution
-
-**We'll focus on WebDriver since it's the most powerful and used in professional testing.**
-
----
-
-## How Selenium Works (Step by Step)
-
-Here's what happens when you use Selenium:
-
-### Step 1: You write Java code
-You write a program telling Selenium what to do:
-```java
-// Open Chrome browser
-WebDriver driver = new ChromeDriver();
-
-// Go to a website
-driver.get("https://www.google.com");
-
-// Find search box and type
-driver.findElement(By.name("q")).sendKeys("Hello Selenium!");
-
-// Click search button
-driver.findElement(By.name("btnK")).click();
+```bash
+mvn archetype:generate -DgroupId=com.krce -DartifactId=selenium-project -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
 ```
 
-### Step 2: Selenium controls the browser
-- Launches Chrome (or any browser)
-- Navigates to websites
-- Clicks buttons, types text, reads content
+Or use VS Code's Maven command palette option.
 
-### Step 3: Browser responds normally
-- Websites think a real person is using them
-- All JavaScript and interactions work normally
+### Your Project Structure:
 
-### Step 4: Your program gets results
-- Read text from pages
-- Check if elements exist
-- Take screenshots
-- Report test results
-
-**It's like having a robot that uses the web for you!** 🤖
+```
+selenium-project/
+├── src/
+│   ├── main/
+│   │   └── java/
+│   │       └── com/krce/
+│   │           └── App.java
+│   └── test/
+│       └── java/
+│           └── com/krce/
+│               └── AppTest.java
+├── pom.xml
+└── target/
+```
 
 ---
 
-## What is WebDriver?
+## Step 2: Add Selenium Dependency
 
-**WebDriver is the heart of Selenium** - it's the Java library that lets you control browsers.
+Selenium is an external library, so we need to add it as a dependency in `pom.xml`.
 
-### Simple WebDriver Example:
+Open your `pom.xml` file and add Selenium in the `<dependencies>` section:
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.13.2</version>
+        <scope>test</scope>
+    </dependency>
+    
+    <!-- Add Selenium dependency -->
+    <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-java</artifactId>
+        <version>4.15.0</version>
+    </dependency>
+</dependencies>
+```
+
+**This tells Maven to download and include Selenium in your project.**
+
+---
+
+## Step 3: Add Maven Exec Plugin
+
+Add the exec plugin configuration (from the previous Maven codelab) to run your Selenium test:
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.1.0</version>
+            <configuration>
+                <mainClass>com.krce.GoogleTest</mainClass>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+**Note:** We'll create `GoogleTest` class in the next step.
+
+---
+
+## Step 4: Create Your First Selenium Test
+
+Create a new Java file in `src/main/java/com/krce/GoogleTest.java`:
 
 ```java
+package com.krce;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class MyFirstSeleniumTest {
+public class GoogleTest {
     public static void main(String[] args) {
-        // Create WebDriver for Chrome
+        // Create a Chrome WebDriver
         WebDriver driver = new ChromeDriver();
-
-        // Open Google
+        
+        // Open Google.com
         driver.get("https://www.google.com");
-
+        
         // Print page title
         System.out.println("Page title: " + driver.getTitle());
-
-        // Close browser
+        
+        // Keep browser open for 3 seconds
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        // Close the browser
         driver.quit();
+        
+        System.out.println("Test completed!");
     }
 }
 ```
 
-**This code automatically opens Chrome, goes to Google, and closes the browser!**
+### What does this code do?
+
+| Line | What it does |
+|------|------------|
+| `new ChromeDriver()` | Creates a Chrome browser instance |
+| `driver.get("...")` | Navigates to Google.com |
+| `driver.getTitle()` | Gets the page title |
+| `Thread.sleep(3000)` | Keeps browser open for 3 seconds |
+| `driver.quit()` | Closes the browser |
 
 ---
 
-## Understanding Web Elements
+## Step 5: Compile Your Project
 
-Web pages are made of **elements** like buttons, text boxes, links, and images.
+```bash
+mvn compile
+```
 
-### Common Web Elements:
-- **Buttons** - `<button>Click me</button>`
-- **Text boxes** - `<input type="text">`
-- **Links** - `<a href="...">Click here</a>`
-- **Images** - `<img src="...">`
-- **Dropdowns** - `<select><option>...</option></select>`
+Maven will download Selenium and compile your code. You should see:
 
-### Finding Elements with Locators
-
-Selenium needs to know **which element** to interact with. We use **locators**:
-
-| Locator Type | Example | When to Use |
-|--------------|---------|-------------|
-| **ID** | `By.id("username")` | When element has unique id |
-| **Name** | `By.name("password")` | When element has name attribute |
-| **Class Name** | `By.className("btn-primary")` | When element has CSS class |
-| **Tag Name** | `By.tagName("button")` | For elements by HTML tag |
-| **Link Text** | `By.linkText("Login")` | For exact link text |
-| **Partial Link Text** | `By.partialLinkText("Log")` | For partial link text |
-| **CSS Selector** | `By.cssSelector("#login-form")` | Advanced CSS selection |
-| **XPath** | `By.xpath("//button[@type='submit']")` | Complex element finding |
-
-**Locators are like addresses - they tell Selenium exactly which element to find!**
+```
+[INFO] BUILD SUCCESS
+```
 
 ---
 
-## Why Selenium for Beginners?
+## Step 6: Download ChromeDriver
 
-As a beginner, Selenium helps you in amazing ways:
+Selenium needs a special driver to control Chrome. Download ChromeDriver:
 
-### 1. **Learn Web Development** 🌐
-- Understand how websites work
-- Learn HTML, CSS, JavaScript concepts
-- See real web interactions
+1. Go to: https://googlechromelabs.github.io/chrome-for-testing/
+2. Download the ChromeDriver for your operating system
+3. Extract the file
+4. Note the path to the `chromedriver` file
 
-### 2. **Build Real Projects** 💼
-- Create web scrapers
-- Build automated test suites
-- Develop browser automation tools
+### Set up ChromeDriver Path
 
-### 3. **Professional Skills** 💼
-- Selenium is used by top companies (Google, Amazon, Netflix)
-- High demand for automation engineers
-- Good salary and job opportunities
+Before running the test, tell Selenium where to find ChromeDriver.
 
-### 4. **Fun and Interactive** 🎮
-- See immediate results in browsers
-- Like programming with visual feedback
-- Easy to debug and understand
+**On Mac/Linux:**
+```bash
+export PATH="/path/to/chromedriver:$PATH"
+```
 
----
+**On Windows:**
+Add the ChromeDriver folder to your system PATH environment variable.
 
-## Selenium vs Manual Testing
-
-| Manual Testing | Selenium Testing |
-|----------------|------------------|
-| Slow and repetitive | Fast and automated |
-| Human errors possible | Consistent results |
-| One browser at a time | Multiple browsers |
-| Boring work | Creative programming |
-| Hard to repeat exactly | Easy to rerun anytime |
-| Expensive (human time) | Cost-effective |
-
-**Selenium turns boring testing into exciting programming!**
+Or you can set it in Java code:
+```java
+System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
+WebDriver driver = new ChromeDriver();
+```
 
 ---
 
-## What You'll Learn Next
+## Step 7: Run Your Selenium Test
 
-After this introduction, you'll learn:
-1. **How to set up Selenium with Maven** (adding dependencies)
-2. **How to install browser drivers** (ChromeDriver, GeckoDriver)
-3. **How to write your first Selenium test**
-4. **How to find and interact with web elements**
-5. **How to handle waits and timeouts**
-6. **How to create test frameworks**
+```bash
+mvn exec:java
+```
 
-**Selenium might seem magical at first, but it's just smart programming!** 😊
+**What will happen:**
 
----
+1. ✅ Chrome browser will open automatically
+2. ✅ It will navigate to Google.com
+3. ✅ The browser will stay open for 3 seconds
+4. ✅ Console will print the page title
+5. ✅ Browser will close automatically
+6. ✅ Test completes!
 
-## Real-World Selenium Uses
-
-Selenium isn't just for testing - here are some cool applications:
-
-### 1. **Automated Testing**
-- Test login forms
-- Check shopping carts
-- Verify search functionality
-
-### 2. **Web Scraping**
-- Collect data from websites
-- Monitor price changes
-- Extract news articles
-
-### 3. **Social Media Automation**
-- Auto-post on social platforms
-- Monitor mentions and replies
-- Generate reports
-
-### 4. **Form Filling**
-- Auto-fill job applications
-- Submit survey responses
-- Create test data
-
-**The possibilities are endless!** 🚀
+**Expected output:**
+```
+Page title: Google
+Test completed!
+```
 
 ---
 
-## Quick Quiz
+## Step 8: Complete pom.xml Example
 
-Test what you learned:
+Here's what your complete `pom.xml` should look like:
 
-1. What does Selenium do? (Automates web browser control)
-2. What is WebDriver? (The main Selenium library for browser control)
-3. What are locators used for? (Finding web elements on pages)
-4. Why is Selenium good for beginners? (Visual feedback, real projects, job skills)
-5. What browsers does Selenium support? (Chrome, Firefox, Edge, Safari, etc.)
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-**Great job!** You've learned the basics of Selenium. Ready to start automating? 🚀
+    <groupId>com.krce</groupId>
+    <artifactId>selenium-project</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.15.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.krce.GoogleTest</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```
+
+---
+
+## Troubleshooting
+
+### Issue 1: "chrome driver executable not found"
+
+**Error:**
+```
+The path to the driver executable must be set by the webdriver.chrome.driver system property
+```
+
+**Solution:**
+- Make sure ChromeDriver is downloaded and accessible
+- Set the path using `System.setProperty()` in your code:
+```java
+System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
+```
+
+### Issue 2: "Chrome version mismatch"
+
+**Error:**
+```
+This version of ChromeDriver only supports Chrome version XX
+```
+
+**Solution:**
+- Download ChromeDriver that matches your Chrome browser version
+- Check your Chrome version: Menu → About Google Chrome
+
+### Issue 3: "BUILD FAILURE during mvn compile"
+
+**Error:**
+```
+[ERROR] BUILD FAILURE
+```
+
+**Solution:**
+1. Check Maven is installed: `mvn --version`
+2. Make sure pom.xml has correct Selenium dependency
+3. Run `mvn clean compile` to start fresh
+
+---
+
+## Summary
+
+✅ Created a Maven project  
+✅ Added Selenium dependency in `pom.xml`  
+✅ Created a Java class that opens Chrome and navigates to Google  
+✅ Compiled and ran the Selenium test  
+✅ Saw Chrome open and close automatically!
+
+**You've written your first Selenium script!** 🎉
+
+---
+
+## What You Learned
+
+- **Selenium** lets you control web browsers with Java code
+- **WebDriver** is the main Selenium class for browser control
+- **Maven** helps manage Selenium as a dependency
+- **ChromeDriver** is needed to control Chrome browser
+- You can automate browser actions with just a few lines of code
+
+---
+
+## Next Steps
+
+Now that you can open websites, try:
+
+1. Finding and clicking buttons
+2. Typing text in search boxes
+3. Reading text from web pages
+4. Taking screenshots
+5. Handling multiple browser windows
+
+**Ready to build more advanced scripts?** 🚀
 </content>
